@@ -1,7 +1,11 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 using Model.ApiRes;
 using SqlSugar;
+using System.Text;
 
 namespace xzhuWebApi.Config
 {
@@ -27,7 +31,7 @@ namespace xzhuWebApi.Config
                     SqlSugarClient db = new SqlSugarClient(new ConnectionConfig()
                     {
                         //连接字符串
-                        ConnectionString = "Data Source=SQLSERVER2019;Initial Catalog=TSAdminDb;Persist Security Info=True;User ID=sa;Password=xx",
+                        ConnectionString = "Data Source=021XZHU1\\SQLSERVER2019;Initial Catalog=TSAdminDb;Persist Security Info=True;User ID=sa;Password=zhuxinyu1314",
                         DbType = DbType.SqlServer,  //数据库类型 sqlserver/  myssql等很多具体去SQL sugar官网上查
                         IsAutoCloseConnection = true,  //是否自动关闭连接
                     });
@@ -51,6 +55,34 @@ namespace xzhuWebApi.Config
             app.Services.AddAutoMapper(typeof(AutoMapperConfigs));
             //第一步，注册JWT
             app.Services.Configure<JWTToken>(app.Configuration.GetSection("JWTToken"));
+
+            //jwt验证
+            #region jwt验证
+            JWTToken tokenOptions = new JWTToken();
+            app.Configuration.Bind("JWTToken", tokenOptions);
+            app.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
+                options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        //JWT有一些默认的属性
+                        ValidateIssuer = true,//是否验证Issuer
+                        ValidateAudience = true,//是否验证Audience
+                        ValidateLifetime = true,//是否验证失效时间
+                        ValidateIssuerSigningKey = true,//是否验证SecurityKey
+                        ValidAudience = tokenOptions.Audience,//
+                        ValidIssuer = tokenOptions.Issuer,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenOptions.SecurityKey))
+                    };
+                });
+            #endregion
+
+            //添加跨域策略
+            app.Services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy", opt => opt.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().WithExposedHeaders("X-Pagination"));
+            });
+
         }
     }
 }
