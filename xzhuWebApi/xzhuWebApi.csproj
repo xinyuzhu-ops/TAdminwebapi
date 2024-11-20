@@ -11,7 +11,7 @@
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.6" />
-    <PackageReference Include="SqlSugarCore" Version="5.0.8.9" />
+    <PackageReference Include="SqlSugarCore" Version="5.1.4.170" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
