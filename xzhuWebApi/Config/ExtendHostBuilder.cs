@@ -32,7 +32,7 @@ namespace xzhuWebApi.Config
                     SqlSugarClient db = new SqlSugarClient(new ConnectionConfig()
                     {
                         //连接字符串
-                        ConnectionString = "Data Source=021XZHU1\\SQLSERVER2019;Initial Catalog=TSAdminDb;Persist Security Info=True;User ID=sa;Password=zhuxinyu1314",
+                        ConnectionString = "Data Source=021XZHU1\\SQLSERVER2019;Initial Catalog=TSAdminDb;User ID=sa;Password=zhuxinyu1314;Encrypt=True;TrustServerCertificate=True",
                         DbType = DbType.SqlServer,  //数据库类型 sqlserver/  myssql等很多具体去SQL sugar官网上查
                         IsAutoCloseConnection = true,  //是否自动关闭连接
                     });
